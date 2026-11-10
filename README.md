@@ -1,6 +1,6 @@
 # Oracle Price Feeds
 
-![Solidity](https://img.shields.io/badge/Solidity-0.8.24-363636) ![Foundry](https://img.shields.io/badge/Foundry-1.7.1-orange) ![Tests](https://img.shields.io/badge/tests-56-brightgreen)
+[![CI](https://github.com/sergiiogg7/oracle-price-feeds/actions/workflows/test.yml/badge.svg)](https://github.com/sergiiogg7/oracle-price-feeds/actions/workflows/test.yml) ![Solidity](https://img.shields.io/badge/Solidity-0.8.24-363636) ![Foundry](https://img.shields.io/badge/Foundry-1.7.1-orange) ![Tests](https://img.shields.io/badge/tests-56-brightgreen)
 
 A price oracle is the most attacked dependency of a DeFi protocol: a stale, zero or manipulated price lets an attacker borrow without collateral or liquidate healthy positions. This repo contains a **production-style `IPriceOracle` adapter** (Chainlink as primary source, Pyth as fallback, L2 sequencer check) and, next to it, the **naive versions most tutorials show**, with the exploit that breaks each one.
 

@@ -15,6 +15,6 @@ Origin: course workshop `Bloque-18` (Chainlink and Pyth oracles, basic and "chec
 - Plug the adapter into `lending-protocol` (replace `MockPriceOracle` in `Deploy`) and run that repo's tests against it. Separate task, in that repo.
 - Deploy to Sepolia and verify on Etherscan; configure a real asset.
 - Optional: deviation check between Chainlink and Pyth with a circuit breaker.
-- Badges with the CI link, push, and `gh run list` after the first push.
+- Done 2026-11-10: first push, CI green, CI badge in README.
 - GitHub About: "Production-style Solidity price oracle adapter: Chainlink primary, Pyth fallback, L2 sequencer check. With the naive versions and the exploits that break them. Foundry."
 - GitHub topics: `solidity`, `foundry`, `chainlink`, `pyth`, `oracle`, `price-feeds`, `defi`, `smart-contract-security`.

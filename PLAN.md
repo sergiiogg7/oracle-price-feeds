@@ -1,0 +1,20 @@
+# Plan
+
+Origin: course workshop `Bloque-18` (Chainlink and Pyth oracles, basic and "checks" versions, no tests). Project type: educational case study plus a reusable `IPriceOracle` adapter for `lending-protocol`. No frontend.
+
+| Date | Change |
+|---|---|
+| 2026-11-10 | Repo created with `forge init`, OpenZeppelin v5.4.0, Pyth SDK v2.2.0, pinned config, CI and Slither config. |
+| 2026-11-10 | `OracleAdapter`: Chainlink primary and Pyth fallback behind the `IPriceOracle` of `lending-protocol`; staleness, round, confidence, exponent and decimal normalization, L2 sequencer check, `Ownable2Step`. Fixes the course fallback, which never triggered on stale prices. |
+| 2026-11-10 | `src/naive/` keeps the two naive oracles as contrast, each with an exploit test. |
+| 2026-11-10 | Tests: unit, exploits, fuzz, invariants checked by mutation, Sepolia fork test. 56 tests (+1 optional fork), 100 % line coverage, Slither 0 findings. First version of the invariants never exercised Pyth (handler had no ETH for the fee); found by reading the revert table and fixed. |
+| 2026-11-10 | Real Sepolia check: ETH/USD read through the adapter (about 2035 USD), Pyth address has code. |
+
+## Pending
+
+- Plug the adapter into `lending-protocol` (replace `MockPriceOracle` in `Deploy`) and run that repo's tests against it. Separate task, in that repo.
+- Deploy to Sepolia and verify on Etherscan; configure a real asset.
+- Optional: deviation check between Chainlink and Pyth with a circuit breaker.
+- Badges with the CI link, push, and `gh run list` after the first push.
+- GitHub About: "Production-style Solidity price oracle adapter: Chainlink primary, Pyth fallback, L2 sequencer check. With the naive versions and the exploits that break them. Foundry."
+- GitHub topics: `solidity`, `foundry`, `chainlink`, `pyth`, `oracle`, `price-feeds`, `defi`, `smart-contract-security`.

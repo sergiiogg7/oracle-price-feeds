@@ -13,7 +13,7 @@ import {ISequencerUptimeFeed} from "../interfaces/ISequencerUptimeFeed.sol";
 /// @dev Returns the USD price (8 decimals) of ONE WHOLE token, as `lending-protocol` expects. It NEVER returns zero:
 ///      when no source gives a valid price it reverts, so the caller cannot value an asset with a bad price.
 ///
-///      Chainlink checks (each one is a real incident class, see `src/naive/` and the exploit tests):
+///      Chainlink checks (each one is a real incident class):
 ///        - `answer > 0` (feeds can return zero or negative values)
 ///        - `updatedAt` not zero and not older than `maxStaleness` (a frozen feed keeps returning its last answer)
 ///        - `answeredInRound >= roundId` (legacy check for carried-over answers)

@@ -4,8 +4,6 @@
 
 **This project has not been audited by any external party.** It is an educational portfolio project. Do not use it with real funds.
 
-The contracts in `src/naive/` are **intentionally naive** and must never be used to value assets. Only `src/oracles/OracleAdapter.sol` is meant to show a sound design.
-
 ## Measures in `OracleAdapter`
 
 | Measure | Where | Mitigates |
@@ -44,8 +42,8 @@ No `ReentrancyGuard` and no `SafeERC20`: the adapter only reads (`view`), moves 
 
 ## Tooling
 
-Slither runs in CI with `fail-on: low`. Silenced findings, all inline with a comment: `unused-return` (only some fields of `latestRoundData` are needed), `pyth-unchecked-confidence` in the adapter (the confidence **is** checked, with a different formula), `timestamp` (see above), and the `unused-return`/`pyth-unchecked-*` findings in `src/naive/` (they are the flaws being demonstrated).
+Slither runs in CI with `fail-on: low`. Silenced findings, all inline with a comment: `unused-return` (only some fields of `latestRoundData` are needed), `pyth-unchecked-confidence` in the adapter (the confidence **is** checked, with a different formula), `timestamp` (see above).
 
 ## Reporting a vulnerability
 
-Use a private GitHub security advisory on this repository. Do not open a public issue for a vulnerability in `OracleAdapter`. Findings in `src/naive/` are known by design.
+Use a private GitHub security advisory on this repository. Do not open a public issue for a vulnerability in `OracleAdapter`.

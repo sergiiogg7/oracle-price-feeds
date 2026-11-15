@@ -18,7 +18,7 @@ SEPOLIA_RPC_URL=<url> forge test --match-contract OracleAdapterForkTest -vv
 
 - `src/oracles/OracleAdapter.sol`: `IPriceOracle` (same interface as `lending-protocol`): Chainlink first, Pyth second, sequencer check, revert instead of 0.
 - `src/naive/`: two oracles that are naive ON PURPOSE. Do not "fix" them; each flaw has an exploit test.
-- `src/interfaces/`: `IPriceOracle` (copy of the lending one, keep both identical) and a minimal `AggregatorV3Interface`.
+- `src/interfaces/`: `IPriceOracle` (copy of the lending one, keep both identical) a minimal `AggregatorV3Interface` (price feeds) and `ISequencerUptimeFeed` (L2 sequencer uptime feed, same `latestRoundData` signature, different meaning).
 - Pyth comes from the `lib/pyth-sdk-solidity` submodule (v2.2.0) with remapping `@pythnetwork/pyth-sdk-solidity/`; tests use its `MockPyth`.
 
 ## Tests

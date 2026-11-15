@@ -10,8 +10,8 @@ interface AggregatorV3Interface {
 
     /// @notice Latest round data.
     /// @return roundId Round id
-    /// @return answer Price, or sequencer status for an L2 sequencer uptime feed (0 = up, 1 = down)
-    /// @return startedAt Timestamp when the round started (for a sequencer feed: when the status last changed)
+    /// @return answer Price (the L2 sequencer uptime feed is read through `ISequencerUptimeFeed`)
+    /// @return startedAt Timestamp when the round started
     /// @return updatedAt Timestamp of the last update
     /// @return answeredInRound Round in which the answer was computed (legacy field)
     function latestRoundData()

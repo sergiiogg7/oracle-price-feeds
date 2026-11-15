@@ -15,6 +15,7 @@ Origin: course workshop `Bloque-18` (Chainlink and Pyth oracles, basic and "chec
 - Plug the adapter into `lending-protocol` (replace `MockPriceOracle` in `Deploy`) and run that repo's tests against it. Separate task, in that repo.
 - Deploy to Sepolia and verify on Etherscan; configure a real asset.
 - Optional: deviation check between Chainlink and Pyth with a circuit breaker.
+- Indirect pairs: support assets that only have a feed against another asset (for example stETH/ETH) by composing two feeds (stETH/ETH x ETH/USD, rescaled back to 8 decimals). `AssetConfig` would hold an optional second feed and each feed would pass its own checks; if either fails, revert. Listed as a limitation in `SECURITY.md` ("Pair type").
 - Done 2026-11-10: first push, CI green, CI badge in README.
 - GitHub About: "Production-style Solidity price oracle adapter: Chainlink primary, Pyth fallback, L2 sequencer check. With the naive versions and the exploits that break them. Foundry."
 - GitHub topics: `solidity`, `foundry`, `chainlink`, `pyth`, `oracle`, `price-feeds`, `defi`, `smart-contract-security`.

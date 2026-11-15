@@ -6,6 +6,7 @@ import {IPyth} from "@pythnetwork/pyth-sdk-solidity/IPyth.sol";
 import {PythStructs} from "@pythnetwork/pyth-sdk-solidity/PythStructs.sol";
 import {AggregatorV3Interface} from "../interfaces/AggregatorV3Interface.sol";
 import {IPriceOracle} from "../interfaces/IPriceOracle.sol";
+import {ISequencerUptimeFeed} from "../interfaces/ISequencerUptimeFeed.sol";
 
 /// @title OracleAdapter
 /// @notice `IPriceOracle` implementation with Chainlink as the primary source and Pyth as the fallback.
@@ -54,7 +55,7 @@ contract OracleAdapter is IPriceOracle, Ownable2Step {
     /// @notice Pyth contract of the chain (zero if Pyth is not used).
     IPyth public immutable pyth;
     /// @notice Chainlink L2 sequencer uptime feed (zero on L1).
-    AggregatorV3Interface public immutable sequencerUptimeFeed;
+    ISequencerUptimeFeed public immutable sequencerUptimeFeed;
 
     mapping(address token => AssetConfig config) private _configs;
 
@@ -88,7 +89,7 @@ contract OracleAdapter is IPriceOracle, Ownable2Step {
     /// @param sequencerUptimeFeed_ Chainlink L2 sequencer uptime feed, or zero on L1
     constructor(address initialOwner, address pyth_, address sequencerUptimeFeed_) Ownable(initialOwner) {
         pyth = IPyth(pyth_);
-        sequencerUptimeFeed = AggregatorV3Interface(sequencerUptimeFeed_);
+        sequencerUptimeFeed = ISequencerUptimeFeed(sequencerUptimeFeed_);
     }
 
     /// @notice Configures the price sources of `token`.
@@ -200,9 +201,16 @@ contract OracleAdapter is IPriceOracle, Ownable2Step {
             if (updatedAt > block.timestamp || block.timestamp - updatedAt > cfg.chainlinkMaxStaleness) {
                 return (false, 0);
             }
+            // Decimal places to add (+) or remove (-) to go from the feed's decimals to PRICE_DECIMALS.
+            // Feed with 18 decimals: 8 - 18 = -10 -> divide by 1e10.
+            // Feed with 6 decimals:  8 - 6  = +2  -> multiply by 1e2.
+            // Feed with 8 decimals:  8 - 8  =  0  -> unchanged.
+            // casting is safe: both values are at most `MAX_DECIMALS` (checked in `setAssetConfig`)
+            // forge-lint: disable-next-line(unsafe-typecast)
+            int256 decimalsToAdd = int256(uint256(PRICE_DECIMALS)) - int256(uint256(cfg.chainlinkDecimals));
             // casting is safe: `answer > 0` was checked above
             // forge-lint: disable-next-line(unsafe-typecast)
-            price = _scale(uint256(answer), int256(uint256(PRICE_DECIMALS)) - int256(uint256(cfg.chainlinkDecimals)));
+            price = _scale(uint256(answer), decimalsToAdd);
             return (price != 0, price);
         } catch {
             return (false, 0);
@@ -229,15 +237,23 @@ contract OracleAdapter is IPriceOracle, Ownable2Step {
         }
     }
 
-    /// @dev Multiplies `value` by `10 ** shift` (divides when `shift` is negative). `|shift| <= MAX_DECIMALS`.
-    function _scale(uint256 value, int256 shift) internal pure returns (uint256) {
-        if (shift >= 0) {
-            // casting is safe: `shift >= 0`
+    /// @dev Moves `value` to a scale with `decimalsToAdd` more decimals (fewer when it is negative):
+    ///      multiplies by `10 ** decimalsToAdd`, or divides by `10 ** -decimalsToAdd` (truncating the remainder).
+    ///      `|decimalsToAdd| <= MAX_DECIMALS`.
+    ///
+    ///      | decimalsToAdd | Operation       | Example (value -> result) |
+    ///      |---------------|-----------------|---------------------------|
+    ///      | +2            | value * 10**2   | 2000_123456 -> 2000_12345600 |
+    ///      |  0            | unchanged       | 2000_12345678 -> 2000_12345678 |
+    ///      | -10           | value / 10**10  | 2000_123456789012345678 -> 2000_12345678 |
+    function _scale(uint256 value, int256 decimalsToAdd) internal pure returns (uint256) {
+        if (decimalsToAdd >= 0) {
+            // casting is safe: `decimalsToAdd >= 0`
             // forge-lint: disable-next-line(unsafe-typecast)
-            return value * 10 ** uint256(shift);
+            return value * 10 ** uint256(decimalsToAdd);
         }
-        // casting is safe: `-shift > 0`
+        // casting is safe: `-decimalsToAdd > 0`
         // forge-lint: disable-next-line(unsafe-typecast)
-        return value / 10 ** uint256(-shift);
+        return value / 10 ** uint256(-decimalsToAdd);
     }
 }

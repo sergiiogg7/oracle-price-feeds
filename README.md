@@ -83,7 +83,7 @@ The invariants were checked by mutation: removing the Chainlink staleness check,
 
 ```text
 src/oracles/OracleAdapter.sol       Chainlink primary, Pyth fallback, sequencer check
-src/interfaces/                     IPriceOracle (same as lending-protocol), minimal AggregatorV3Interface
+src/interfaces/                     IPriceOracle (same as lending-protocol), AggregatorV3Interface, ISequencerUptimeFeed
 src/naive/                          the two intentionally naive oracles
 test/mocks/MockAggregator.sol       controllable Chainlink feed (Pyth uses its official MockPyth)
 script/Deploy.s.sol                 deployment from environment variables

@@ -1,6 +1,6 @@
 # Chainlink Price Feeds
 
-[![CI](https://github.com/sergiiogg7/oracle-price-feeds/actions/workflows/test.yml/badge.svg)](https://github.com/sergiiogg7/oracle-price-feeds/actions/workflows/test.yml) ![Solidity](https://img.shields.io/badge/Solidity-0.8.24-363636) ![Foundry](https://img.shields.io/badge/Foundry-1.7.1-orange) ![Tests](https://img.shields.io/badge/tests-32-brightgreen)
+[![CI](https://github.com/sergiiogg7/chainlink-price-feeds/actions/workflows/test.yml/badge.svg)](https://github.com/sergiiogg7/chainlink-price-feeds/actions/workflows/test.yml) ![Solidity](https://img.shields.io/badge/Solidity-0.8.24-363636) ![Foundry](https://img.shields.io/badge/Foundry-1.7.1-orange) ![Tests](https://img.shields.io/badge/tests-32-brightgreen)
 
 A price oracle is the most attacked dependency of a DeFi protocol: a stale, zero or negative price lets an attacker borrow without collateral or liquidate healthy positions. This repo contains a **production-style `IPriceOracle` implementation on top of Chainlink price feeds**: staleness, round, decimals and L2 sequencer checks, and a revert instead of ever returning zero.
 
@@ -44,7 +44,7 @@ Each configured asset has its own `maxStaleness` (`setAssetConfig`): use the fee
 
 ```bash
 git clone --recurse-submodules <repo-url>
-cd oracle-price-feeds
+cd chainlink-price-feeds
 forge build
 forge test                                   # 32 tests (+1 skipped fork test)
 FOUNDRY_PROFILE=ci forge test                # 5000 fuzz runs, 512x256 invariants
